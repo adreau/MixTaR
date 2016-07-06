@@ -17,8 +17,10 @@ set(MIXTAR_SRC
   src/main.cpp 
   src/smallAssemblyFind.cpp 
   src/smallAssemblyOverlap.cpp)
-#target_link_libraries(DExTaR LINK_PUBLIC ${Boost_LIBRARIES})
 
+# define the binary name to compile
 add_executable(mixtar ${MIXTAR_SRC})
+# link to specified library
 target_link_libraries(mixtar gatbcore)
-
+# install binary in specified directory
+install(TARGETS mixtar RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX})
