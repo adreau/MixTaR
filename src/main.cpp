@@ -113,7 +113,7 @@ template <class T> unsigned int levenshtein_distance(const T& s1,
 		for(unsigned int j = 1; j <= len2; ++j)
  
                       d[i][j] = std::min( std::min(d[i - 1][j] + 1,d[i][j - 1] + 1),
-                                          d[i - 1][j - 1] + (s1[i - 1] = =  s2[j - 1] ? 0 : 1) );
+                                          d[i - 1][j - 1] + (s1[i - 1] ==  s2[j - 1] ? 0 : 1) );
                                           
 	return d[len1][len2];
 	
