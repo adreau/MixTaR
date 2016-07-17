@@ -938,7 +938,7 @@ int main(int argc, char **argv)
 {
 
 	string arg = "";
-	vector<string> files;
+	string files = "";
 	string	fileLongRead;
 	int maxRepLenMax;
 	int maxRepLenMin;
@@ -968,9 +968,10 @@ int main(int argc, char **argv)
 			if(arg == "-s") {
 			
 				while (string(argv[i+1]) != "-c"){
-					files.push_back(argv[i+1]);
+					files=files+","+argv[i+1];
 					i++;
 				}
+				files=files.substr(1);
 				
 			}
 			
@@ -1008,8 +1009,8 @@ int main(int argc, char **argv)
 	sparse_hash_map<string,int>::iterator itMap;
 	
 	//shrot reads files iterator
-	string fileT="../tests/pairedShortReads_1.fasta,../tests/pairedShortReads_2.fasta";
-	const string& fileTest=fileT;
+	//string fileT="../tests/pairedShortReads_1.fasta,../tests/pairedShortReads_2.fasta";
+	const string& fileTest=files;
 	//BankFasta b (fileT);
 	//BankFasta::Iterator itSeq (b);
 	IBank* bank = Bank::open (fileTest);
