@@ -833,7 +833,13 @@ void findCycles(string & startNode, string & vertexNode,string & k1start, int fr
 	stack.push_back(vertexNode);
 	//cout<<vertexNode<<endl;
 	//get its neighbors
+	/*pour version de gatb-core 1.1.0*/
 	Graph::Vector<Node> neighborsGraph = graph.successors<Node> (graph.buildNode ((char*)vertexNode.c_str()));
+	
+	/*pour version de gatb_core 1.2.1
+	Node currentN=graph.buildNode ((char*)vertexNode.c_str());
+	Graph::Vector<Node> neighborsGraph = graph.successors (currentN);*/
+	
 	//cout<<"stack: "<<stack.size()<<" max size"<<stack.max_size()<<endl;
 	multimap<int,string> neighbors;
 	string successor;
@@ -1002,10 +1008,15 @@ int main(int argc, char **argv)
 	sparse_hash_map<string,int>::iterator itMap;
 	
 	//shrot reads files iterator
-	BankFasta b (files);
-	BankFasta::Iterator itSeq (b);
+	string fileT="../tests/pairedShortReads_1.fasta,../tests/pairedShortReads_2.fasta";
+	const string& fileTest=fileT;
+	//BankFasta b (fileT);
+	//BankFasta::Iterator itSeq (b);
+	IBank* bank = Bank::open (fileTest);
+	LOCAL (bank);
+	ProgressIterator<Sequence> itSeq (*bank);
 	
-	cout<<"hash map bank size "<<b.getSize()<<endl;
+	//cout<<"hash map bank size "<<b.getSize()<<endl;
 	//short reads kmer model
 	Kmer<64>::ModelDirect model (kmerSize);
 	Kmer<64>::ModelDirect::Iterator itKmer (model);
@@ -1076,12 +1087,13 @@ int main(int argc, char **argv)
 	//nb of threads for graph construction
 	int threads = 2;
 	
-	IBank* bank = new BankFasta (files);
+	//IBank* bank = new BankFasta (fileT);
 	cout<<"Bank construction"<<endl;
 	cout<<"graph bank size "<<bank->getSize()<<endl;
-	graph = Graph::create (bank, "-kmer-size %d -abundance %d -bloom cache -debloom original -nb-cores %d", 
-					 kmerSize-1, 1, threads);
-
+	//graph = Graph::create (bank, "-kmer-size %d -abundance-min %d -bloom cache -debloom original -nb-cores %d", 
+					// kmerSize-1, 1, threads);
+	graph = Graph::create (bank, "-kmer-size %d -abundance-min %d -nb-cores %d", 
+					   kmerSize-1, 1, threads);
 	/*
 	// We get an iterator for all nodes of the graph.
     Graph::Iterator<Node> itGraph = graph.iterator<Node> ();
